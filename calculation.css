@@ -1,0 +1,91 @@
+body {
+    background-color: black; /* Sets the background color */
+    color: white; /* Sets text color to white */
+    font-family: Arial, sans-serif; /* Sets a simple, clean font */
+    margin: 0;
+    padding: 20px; /* Adds padding around the content */
+}
+
+img{
+    display:block;
+    margin: 0 auto;
+    position: absolute;
+    top: -4%;
+}
+
+
+hr{
+    border: 2px solid white;
+    margin: 80px 0;
+}
+
+
+h3{
+    font-size: 40px;
+    text-align: center;
+    color: white;
+    margin-top: 70px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.container {
+    display: flex; /* Uses flexbox to arrange children side by side */
+    justify-content: space-between; /* Spreads the items evenly within the container */
+    margin-bottom: 20px; /* Adds space below each container */
+    padding: 10px;
+}
+
+.container div {
+    background-color: rgba(255, 255, 255, 0.1); /* Adds a semi-transparent background */
+    border-radius: 10px; /* Rounds the corners */
+    padding: 20px; /* Adds space inside the divs */
+    width: 48%; /* Ensures the two divs take up the whole container */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+/* Ensure all buttons have a consistent style */
+button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Adds space inside the button */
+    border: none; /* Removes border */
+    border-radius: 5px; /* Rounds the corners of the button */
+    cursor: pointer; /* Changes cursor to pointer on hover */
+    font-size: 16px; /* Increases the font size */
+    margin-top: 10px; /* Adds space above the button */
+}
+
+button:hover {
+    background-color: #45a049; /* Darkens the button color on hover */
+}
+
+/* Styling the h1 headers */
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Adjusting the input fields */
+input[type="number"] {
+    width: 100%; /* Makes the input fields take the full width of the container */
+    padding: 8px; /* Adds padding inside the input fields */
+    margin: 5px 0 10px 0; /* Adds space around the input fields */
+    display: inline-block; /* Aligns the input fields in a line */
+    border: 1px solid #ccc; /* Adds a light gray border */
+    border-radius: 4px; /* Rounds the corners of the input fields */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+/* Styling the paragraph elements displaying results */
+p {
+    font-size: 18px; /* Adjust font size for readability */
+    margin: 5px 0; /* Adds space between paragraphs */
+    padding: 5px; /* Adds padding inside the paragraphs */
+    width: 100%; /* Makes sure paragraphs take up the full width of the container */
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+

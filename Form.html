@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="Form.css">
+    <title>Form Page</title>
+</head>
+<body>
+    <img src = "Picture/mna logo.png" style="width:320px;height: 300px;">
+    <p>No Power No Worries, Power Up With Us!</p>
+    <hr>
+    <h1>Forms</h1>
+
+    <div id="user-details">
+        <p id="user-name"></p>
+        <p id="user-usage"></p>
+        <p id="user-address"></p>
+        <p id="user-phone"></p>
+        <p id="user-quotation"></p>
+        <p id="user-system"></p>
+    </div>
+
+    <h2>With Surge Equipment</h2>
+    <div id="surge-equipments"></div>
+    <h2>Without Surge Equipment</h2>
+    <div id="no-surge-equipments"></div>
+    
+    <button type="button" onclick="calculateLoad()">Calculate</button>
+
+    <p id="total-load"></p>
+    <p id="total-wh"></p>
+    <p id="total-load-Without"></p>
+    <p id="total-wh-Without"></p>
+    <p id="Total-Load"></p>
+    <p id="Total-Consumption"></p>
+
+    <a href="Calculation.html"><button type="button" id="next-button" disabled>Next</button></a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const name = localStorage.getItem('name');
+            const usage = localStorage.getItem('usage');
+            const address = localStorage.getItem('address');
+            const phone = localStorage.getItem('phone');
+            const quotation = localStorage.getItem('quotation');
+            const system = localStorage.getItem('system');
+            const surgeItems = parseInt(localStorage.getItem('surgeItems'));
+            const noSurgeItems = parseInt(localStorage.getItem('noSurgeItems'));
+
+            document.getElementById('user-name').innerText = 'Name: ' + name;
+            document.getElementById('user-usage').innerText = 'Use For: ' + usage;
+            document.getElementById('user-address').innerText = 'Address: ' + address;
+            document.getElementById('user-phone').innerText = 'No. Phone: ' + phone;
+            document.getElementById('user-quotation').innerText = 'No. Quotation: ' + quotation;
+            document.getElementById('user-system').innerText = 'Number System: ' + system;
+
+            const surgeContainer = document.getElementById('surge-equipments');
+            const noSurgeContainer = document.getElementById('no-surge-equipments');
+            surgeContainer.innerHTML = '';
+            noSurgeContainer.innerHTML = '';
+
+            for (let i = 0; i < surgeItems; i++) {
+                const formHTML = `
+                <div class="surge-item">
+                    <h3>Item ${i + 1}</h3>
+                    <label for="item-${i}">Item:</label> <input type="text" id="item-${i}"><br>
+                    <label for="unit-${i}">Units:</label> <input type="number" id="unit-${i}" min="1"><br>
+                    <label>Using on:</label>
+                    <input type="checkbox" id="day-${i}" name="day-${i}" value="Day">
+                    <label for="day-${i}">Day</label>
+                    <input type="checkbox" id="night-${i}" name="night-${i}" value="Night">
+                    <label for="night-${i}">Night</label><br>
+                    <label for="watt-${i}">Wattage:</label> <input type="number" id="watt-${i}" min="1"><br>
+                    <label for="hours-${i}">Hours:</label> <input type="number" id="hours-${i}" min="1"><br>
+                    <label>Direct or Alternative Current:</label>
+                    <input type="radio" id="dc-${i}" name="current-${i}" value="DC">
+                    <label for="dc-${i}">DC</label>
+                    <input type="radio" id="ac-${i}" name="current-${i}" value="AC">
+                    <label for="ac-${i}">AC</label><br>
+                    <div id="result-${i}">
+                        <div id="item-load-${i}"></div>
+                        <div id="item-wh-${i}"></div>
+                    </div>
+                </div>
+                <hr>`;
+                surgeContainer.insertAdjacentHTML('beforeend', formHTML);
+            }
+
+            for (let j = 0; j < noSurgeItems; j++) {
+                const formHTML = `
+                <div class="no-surge-item">
+                    <h3>Item ${j + 1}</h3>
+                    <label for="no-item-${j}">Item:</label> <input type="text" id="no-item-${j}"><br>
+                    <label for="no-unit-${j}">Units:</label> <input type="number" id="no-unit-${j}" min="1"><br>
+                    <label>Using on:</label>
+                    <input type="checkbox" id="no-day-${j}" name="no-day-${j}" value="Day">
+                    <label for="no-day-${j}">Day</label>
+                    <input type="checkbox" id="no-night-${j}" name="no-night-${j}" value="Night">
+                    <label for="no-night-${j}">Night</label><br>
+                    <label for="no-watt-${j}">Wattage:</label> <input type="number" id="no-watt-${j}" min="1"><br>
+                    <label for="no-hours-${j}">Hours:</label> <input type="number" id="no-hours-${j}" min="1"><br>
+                    <label>Direct or Alternative Current:</label>
+                    <input type="radio" id="no-dc-${j}" name="no-current-${j}" value="DC">
+                    <label for="no-dc-${j}">DC</label>
+                    <input type="radio" id="no-ac-${j}" name="no-current-${j}" value="AC">
+                    <label for="no-ac-${j}">AC</label><br>
+                    <div id="no-result-${j}">
+                        <div id="no-item-load-${j}"></div>
+                        <div id="no-item-wh-${j}"></div>
+                    </div>
+                </div>
+                <hr>`;
+                noSurgeContainer.insertAdjacentHTML('beforeend', formHTML);
+            }
+        });
+
+        function calculateLoad() {
+            const surgeItems = parseInt(localStorage.getItem('surgeItems'));
+            const noSurgeItems = parseInt(localStorage.getItem('noSurgeItems'));
+            let totalLoad = 0;
+            let totalWh = 0;
+
+            for (let i = 0; i < surgeItems; i++) {
+                const watt = parseFloat(document.getElementById(`watt-${i}`).value);
+                const unit = parseFloat(document.getElementById(`unit-${i}`).value);
+                const hours = parseFloat(document.getElementById(`hours-${i}`).value);
+
+                if (!isNaN(watt) && !isNaN(unit) && !isNaN(hours)) {
+                    const load = watt * unit;
+                    const WH = load * hours;
+
+                    totalLoad += load;
+                    totalWh += WH;
+
+                    document.getElementById(`item-load-${i}`).innerHTML = 'Load for Item ' + (i + 1) + ': ' + load + ' W';
+                    document.getElementById(`item-wh-${i}`).innerHTML = 'Consumption for Item ' + (i + 1) + ': ' + WH + ' Wh';
+                }
+            }
+
+            document.getElementById('total-load').innerHTML = 'Total Load with Surge: ' + totalLoad + ' W';
+            document.getElementById('total-wh').innerHTML = 'Total Consumption with Surge: ' + totalWh + ' Wh';
+
+            let totalLoadWithout = 0;
+            let totalWhWithout = 0;
+
+            for (let j = 0; j < noSurgeItems; j++) {
+                const watt = parseFloat(document.getElementById(`no-watt-${j}`).value);
+                const unit = parseFloat(document.getElementById(`no-unit-${j}`).value);
+                const hours = parseFloat(document.getElementById(`no-hours-${j}`).value);
+
+                if (!isNaN(watt) && !isNaN(unit) && !isNaN(hours)) {
+                    const load = watt * unit;
+                    const WH = load * hours;
+
+                    totalLoadWithout += load;
+                    totalWhWithout += WH;
+
+                    document.getElementById(`no-item-load-${j}`).innerHTML = 'Load for Item ' + (j + 1) + ': ' + load + ' W';
+                    document.getElementById(`no-item-wh-${j}`).innerHTML = 'Consumption for Item ' + (j + 1) + ': ' + WH + ' Wh';
+                }
+            }
+
+            document.getElementById('total-load-Without').innerHTML = 'Total Load without Surge: ' + totalLoadWithout + ' W';
+            document.getElementById('total-wh-Without').innerHTML = 'Total Consumption without Surge: ' + totalWhWithout + ' Wh';
+
+            const totalLoadBoth=totalLoad+totalLoadWithout;
+            const totalWHBoth = totalWh+totalWhWithout;
+            document.getElementById('Total-Load').innerHTML = 'Total Load: ' + totalLoadBoth + ' W';
+            document.getElementById('Total-Consumption').innerHTML = 'Total Consumption: '+ totalWHBoth + ' WH';
+            
+            localStorage.setItem('totalLoadBoth',totalLoadBoth);
+            localStorage.setItem('totalWHBoth',totalWHBoth);
+
+           document.getElementById('next-button').disabled = false;
+        }
+    </script>
+</body>
+</html>

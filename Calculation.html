@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="calculation.css">
+    <title>Document</title>
+</head>
+<body>
+    <img src = "Picture/mna logo.png" style="width:320px;height: 300px;">
+    <h3>No Power No Worries, Power Up With Us!</h3>
+    <hr>
+
+<div class="container">
+    <div class="Panel-calculation">
+        <h1>Panel Calculatioan</h1>
+        <label>Total Consumtion :</label><input type="number" id="wh" readonly><br>  
+        <label>Sun Duration :</label><input type="number" id="sun" ><br>
+        <label>System:</label><input type = "number" id = "system" readonly><br>
+        <label>Panel Used (W):</label><input type = "number" id = "Panel-Used"><br>
+        <button type = "button" onclick="calculatePanel()">Calculate</button>
+        <p id = "Total-Watt"></p>
+        <p id = "Total-Watt-Required"></p>
+        <p id = "Amount-Of-Panel-Req"></p>
+        <p id = "Power-loss"></p>
+        <p id = "Final-Panel"></p>
+    </div>
+    <div class="Battery-calculation">
+        <h1>Battery Calculation</h1>
+        <label>Total Consumption :</label><input type="number" id="whB" readonly><br>
+        <label>Voltage Requires : </label> <input type="number" id="voltage"><br>
+        <label>System :</label><input type="number" id="systemB" readonly><br>
+        <label>Battery Used :</label><input type="number" id="Battery"><br>
+        <button type="button" onclick="calculateBattery()">Calculate</button>
+        <p id="Total-Amperage-Hour"></p>
+        <p id="Amperage-Hour/System"></p>
+        <p id="TotalUnit"></p>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="Inverter-calculation">
+        <h1>Inverter Calculation</h1>
+        <label>Total Watt : </label><input type = "number" id="ttlWatt" readonly><br>
+        <label>System : </label><input type = "number" id="SystemInv" readonly><br>
+        <button type="button" onclick="calculateInv()">Calculate</button>
+        <p id="Watt/System"></p>
+        <p id="twicepeak"></p>
+    </div>
+
+    <div class="Controller-calculation">
+        <h1>Controller Calculation</h1>
+        <label>Panel Wattage : </label><input type="number" id="Panelwh"><br> 
+        <label>Quantity of Panel Use : </label><input type="number" id="units"><br>
+        <label>System Voltage :</label><input type="number" id ="systemVoltage"><br>
+        <button type="button" onclick="calculateController()">Calculate</button>
+        <p id="ttlPanelWatt"></p>
+        <p id="CAmpere"></p>
+    </div>
+</div>
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function(){
+            const totalWHBoth = localStorage.getItem('totalWHBoth');
+            const totalLoadBoth = localStorage.getItem ('totalLoadBoth');
+            const totalSystem = localStorage.getItem('system');
+            const PanelWattage = localStorage.getItem('PanelWattage');
+
+            //panel consumption and system
+            document.getElementById('wh').value=totalWHBoth;
+            document.getElementById('system').value=totalSystem;
+
+            //battery consuption and system
+            document.getElementById('whB').value=totalWHBoth;
+            document.getElementById('systemB').value=totalSystem;
+
+            //Inverter System and Total Load(watt)
+            document.getElementById('SystemInv').value=totalSystem;
+            document.getElementById('ttlWatt').value = totalLoadBoth;
+
+            //Controller
+            document.getElementById('Panelwh').value=PanelWattage;
+
+            
+        })
+
+
+        function calculatePanel(){
+            const WH = parseInt (document.getElementById('wh').value);
+            const SUN = parseInt(document.getElementById('sun').value);
+            const ttlwatt = WH/SUN;
+            const resultttlwatt = ttlwatt.toFixed(2);
+            const SYSTEM= parseInt (document.getElementById('system').value);
+            const PANELUSED = parseInt (document.getElementById('Panel-Used').value)
+            const WattRequires = ttlwatt/SYSTEM;
+            const resultWattRequires = WattRequires.toFixed(2);
+            const AmountPanel = WattRequires/PANELUSED;
+            const PowerLoss = 1.3*WattRequires;
+            const resultPowerLoss = PowerLoss.toFixed(2);
+            const FinalPanel = PowerLoss/PANELUSED;
+            document.getElementById('Total-Watt').innerHTML = 'Total Watt: ' + resultttlwatt + 'W'; 
+            document.getElementById('Total-Watt-Required').innerHTML = 'Total Watt Required: ' + resultWattRequires + ' W';
+            document.getElementById('Amount-Of-Panel-Req').innerHTML = 'Amount Of Panel Required: ' + Math.ceil(AmountPanel) + ' Unit';
+            document.getElementById('Power-loss').innerHTML = 'Additional power loss 30% : ' + resultPowerLoss + ' W';
+            document.getElementById('Final-Panel').innerHTML = 'Total Panel : ' + Math.ceil(FinalPanel) + ' Unit Panel';
+
+            localStorage.setItem('PANELUSED', PANELUSED);
+            localStorage.setItem('FinalPanel', FinalPanel);
+
+            document.getElementById('Panelwh').value = PANELUSED;
+            document.getElementById('units').value = Math.ceil(FinalPanel);
+        }
+        
+        function calculateBattery(){
+            const WH = parseInt(document.getElementById('whB').value);
+            const VOLTAGE = parseInt(document.getElementById ('voltage').value);
+            const SYSTEM = parseInt(document.getElementById('system').value);
+            const ttlAmp = WH/VOLTAGE;
+            const resultttlAmp = ttlAmp.toFixed(2);
+            const AmpHourSystem = ttlAmp/SYSTEM;
+            const resultAmpHourSystem = AmpHourSystem.toFixed(2);
+            const BatteryUsed = parseInt(document.getElementById('Battery').value);
+            const ttlUnit = AmpHourSystem/BatteryUsed;
+            document.getElementById('Total-Amperage-Hour').innerHTML = 'Total Amperage-Hour:' + resultttlAmp + ' AH';
+            document.getElementById('Amperage-Hour/System').innerHTML = 'Amperage-Hour/System:' + resultAmpHourSystem + ' AH';
+            document.getElementById('TotalUnit').innerHTML = 'Total Unit Battery: ' + Math.ceil(ttlUnit) + ' Unit';
+
+            document.getElementById('systemVoltage').value=VOLTAGE;
+        }
+        
+
+        function calculateInv(){
+            const NUM = parseInt (document.getElementById('ttlWatt').value);
+            const SYSTEM = parseInt(document.getElementById('system').value);
+            const WSystem = NUM/SYSTEM;
+            const TwicePeak = WSystem*2;
+            document.getElementById('Watt/System').innerHTML = 'Watt/System : ' + WSystem + ' W';
+            document.getElementById('twicepeak').innerHTML = 'At Twice peak :' + TwicePeak + ' W';
+        }
+
+        function calculateController(){
+            const PanelWatt = parseFloat(localStorage.getItem('PANELUSED'));
+            const QTTY = parseInt(document.getElementById('units').value);
+            const VOLT = parseInt(document.getElementById('systemVoltage').value);
+            const TTLPANELWATT = PanelWatt*QTTY;
+            const CURRENTAMPERE = TTLPANELWATT/VOLT;
+            const RESULTCURRENTAMPERE = CURRENTAMPERE.toFixed(2);
+            document.getElementById('ttlPanelWatt').innerHTML = 'Total Panel Wattage: ' + TTLPANELWATT + ' W';
+            document.getElementById('CAmpere').innerHTML = 'Current (Ampere) : ' + RESULTCURRENTAMPERE + ' A';
+        }
+
+
+    </script>
+</body>
+</html>

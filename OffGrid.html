@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="OffGrid.css"/>
+    <title>Document</title>
+</head>
+<body>
+    <img src = "Picture/mna logo.png" style="width:320px;height: 300px;">
+    <p>No Power No Worries, Power Up With Us!</p>
+    <hr>
+
+<div class = "form">
+    <h1>Off-Grid System</h1>
+ <div class="form-group">
+    <label for="name">Name:</label>
+     <input type="text" id="name"> <br>
+ </div>
+
+ <div class="form-group">
+    <label for="usage">Use For:</label> 
+    <input type="text" id="usage"> <br>
+ </div>
+
+ <div class="form-group">
+    <label for="address">Adress:</label> 
+    <input type="text" id="address"> <br>
+ </div>
+
+ <div class="form-group">
+    <label for="phone">No. Phone:</label> 
+    <input type="text" id="phone"> <br>
+
+ </div>
+ 
+ <div class="form-group">
+    <label for="quotation">No. Quotation:</label> 
+    <input type="number" id="quotation"> <br>
+ </div>
+
+ <div class="form-group">
+    <label for="System">Number System:</label> 
+    <input type="number" id="system"><br>
+ </div>
+    
+ <div class="form-group">
+    <label for="surge">How many items WITH SURGE equipment?</label>
+     <input type="number" id="surge" min="0"> <br>
+ </div>
+
+ <div class="form-group">
+    <label for ="no-surge">How many items WITHOUT SURGE equipment?</label> 
+    <input type="number" id="no-surge" min="0"><br>
+ </div>
+   
+    <button type = "button" onclick="saveAndRedirect()">Next</button>
+</div>
+
+    <script>
+        function saveAndRedirect(){
+            const name= document.getElementById('name').value;
+            const usage = document.getElementById('usage').value;
+            const address= document.getElementById('address').value;
+            const phone = document.getElementById('phone').value;
+            const quotation = document.getElementById('quotation').value;
+            const system = document.getElementById('system').value;
+            const surgeItems = document.getElementById('surge').value;
+            const noSurgeItems = document.getElementById('no-surge').value;
+
+
+            localStorage.setItem('name', name);
+            localStorage.setItem('usage', usage);
+            localStorage.setItem('address', address);
+            localStorage.setItem('phone', phone);
+            localStorage.setItem('quotation', quotation);
+            localStorage.setItem('system', system);
+            localStorage.setItem('surgeItems', surgeItems);
+            localStorage.setItem('noSurgeItems', noSurgeItems);
+
+            window.location.href = 'Form.html'
+        }
+    </script>
+
+</body>
+</html>
